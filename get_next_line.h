@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 17:42:32 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/01/22 16:29:05 by fmanetti         ###   ########.fr       */
+/*   Updated: 2020/01/28 12:10:46 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>  
+#include <fcntl.h>
 
 typedef struct  s_file
 {

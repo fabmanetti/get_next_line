@@ -6,32 +6,12 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 17:41:53 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/01/22 16:29:40 by fmanetti         ###   ########.fr       */
+/*   Updated: 2020/01/28 19:52:08 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static	void		ft_cut(char **line, char **str)
-{
-	int		x;
-
-	x = 0;
-	if (ft_strchr(*str, '\n'))
-	{
-		while ((*str)[x] != '\n')
-			x++;
-		*line = ft_substr(*str, 0, x);
-		*str = *str + x + 1; 
-	}
-	else
-	{
-		x = ft_strlen(*str);
-		*line = ft_substr(*str, 0, x);
-		*str = *str + x;
-	}
-	
-}
 
 static t_file		*create_check(int fd, t_file **head)
 {
@@ -56,6 +36,44 @@ static t_file		*create_check(int fd, t_file **head)
 	return (tmp);
 }
 
+static	void		ft_cut(char **line, char **str)
+{
+	int		x;
+
+	x = 0;
+	if (ft_strchr(*str, '\n'))
+	{
+		while ((*str)[x] != '\n')
+			x++;
+		*line = ft_substr(*str, 0, x);
+		//*str = *str + x + 1; 
+	}
+	else
+	{
+		x = ft_strlen(*str);
+		*line = ft_substr(*str, 0, x);
+		//*str = *str + x;
+	}
+}
+
+static	void	advance(char **str)
+{
+	int		x;
+
+	x = 0;
+	if (ft_strchr(*str, '\n'))
+	{
+		while ((*str)[x] != '\n')
+			x++;
+		*str = *str + x + 1; 
+	}
+	else
+	{
+		x = ft_strlen(*str);
+		*str = *str + x;
+	}
+}
+
 int		get_next_line(int fd, char **line)
 {
 	int				bd;
@@ -64,7 +82,7 @@ int		get_next_line(int fd, char **line)
 	static	t_file	*head;	//indirizzo di memoria primo nodo
 
 	tmp = create_check(fd, &head);
-	if (fd < 0 || !line || BUFFER_SIZE < 1 || !tmp)
+	if (fd < 0 || !line || BUFFER_SIZE < 1 || !tmp) // errori 1
 		return (-1);
 	while ((bd = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
@@ -73,10 +91,32 @@ int		get_next_line(int fd, char **line)
 		if (ft_strchr(buf, '\n'))
 			break;
 	}
-	if (bd < 0)
+	if (bd < 0)									//errori 2
 		return (-1);
-	if (bd == 0 && !(ft_strlen(tmp->content)))
-		return (0);
 	ft_cut(line, &(tmp->content));
+	if (*line == NULL)
+	{
+		if (!(*line = malloc(sizeof(char))))
+			return (-1);
+		(*line)[0] = '\0';
+	}
+	if (bd == 0 && (tmp->content)[0] == '\0')
+		return (0);
+	advance(&(tmp->content));
 	return (1);
 }
+
+ int		main(int argc, char **argv)
+  {
+  	char *ciao;
+  	int fd;
+
+  	ciao = NULL;
+ 	argc = 2;
+  	fd = open(argv[1], O_RDONLY);
+  	while (get_next_line(fd, &ciao) > 0) 
+ 		printf("|%s\n", ciao);
+	printf("|%s\n", ciao);
+ 	while(1)
+  	return (0);
+  }
