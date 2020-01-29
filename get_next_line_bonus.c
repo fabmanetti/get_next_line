@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 17:41:53 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/01/29 16:55:52 by fmanetti         ###   ########.fr       */
+/*   Updated: 2020/01/29 12:42:48 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,10 @@ static t_file		*create_check(int fd, t_file **head)
 		tmp = tmp->next; //scorro la lista
 	}
 	//uso tmp poiché è alla fine quindi tmp = NULL
-	if (!(tmp = malloc(sizeof(t_file)))) //malloc
+	if (!(tmp = malloc(sizeof(t_file))))
 		return (NULL);
-	printf("1 = %p\n", tmp);	
-	if (!(tmp->content = malloc(1))) //leak
+	if (!(tmp->content = malloc(1)))
 		return (NULL);
-	printf("2 = %p\n", tmp->content);
 	tmp->fd = fd;
 	tmp->content[0] = '\0';
 	tmp->next = *head;
@@ -47,13 +45,31 @@ static	void		ft_cut(char **line, char **str)
 	{
 		while ((*str)[x] != '\n')
 			x++;
-		*line = ft_substr(*str, 0, x); 
-		*str = *str + x; 
+		*line = ft_substr(*str, 0, x);
+		//*str = *str + x + 1; 
 	}
 	else
 	{
 		x = ft_strlen(*str);
 		*line = ft_substr(*str, 0, x);
+		//*str = *str + x;
+	}
+}
+
+static	void	advance(char **str)
+{
+	int		x;
+
+	x = 0;
+	if (ft_strchr(*str, '\n'))
+	{
+		while ((*str)[x] != '\n')
+			x++;
+		*str = *str + x; 
+	}
+	else
+	{
+		x = ft_strlen(*str);
 		*str = *str + x;
 	}
 }
@@ -84,13 +100,24 @@ int		get_next_line(int fd, char **line)
 			return (-1);
 		(*line)[0] = '\0';
 	}
+	advance(&(tmp->content));
 	if (bd == 0 && (tmp->content)[0] == '\0')
-	{
-		if (!tmp)
-			free(tmp);
 		return (0);
-	}
 	tmp->content++;
 	return (1);
 }
 
+//  int		main(int argc, char **argv)
+//   {
+//   	char *ciao;
+//   	int fd;
+
+//   	ciao = NULL;
+//  	argc = 2;
+//   	fd = open(argv[1], O_RDONLY);
+//   	while (get_next_line(fd, &ciao) > 0) 
+//  		printf("|%s\n", ciao);
+// 	printf("|%s\n", ciao);
+//  	while(1)
+//   	return (0);
+//   }

@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 15:51:01 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/01/29 16:55:53 by fmanetti         ###   ########.fr       */
+/*   Updated: 2020/01/28 19:52:09 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static char	*ft_strdup(const char *s1)
 	x = ft_strlen(s1);
 	if (!(p = malloc((x + 1) * sizeof(char))))
 		return (0);
-	printf("3 = %p\n", p);
 	while (x--)
 	{
 		p[i] = s1[i];
@@ -45,9 +44,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!s1 || !s2)
 		return (0);
 	z = ft_strlen(s1);
-	if (!(s3 = (char*)malloc((z + ft_strlen(s2) + 1) * sizeof(char)))) //leak
+	if (!(s3 = (char*)malloc((z + ft_strlen(s2) + 1) * sizeof(char))))
 		return (NULL);
-	printf("4 = %p\n", s3);
 	while (s1[i] != '\0')
 	{
 		s3[i] = s1[i];
@@ -92,7 +90,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	x = ft_strlen(s);
 	if (!(s2 = (char*)malloc((len + 1) * sizeof(char))))
 		return (NULL);
-	printf("5 = %p\n", s2);
 	if (start > x)
 		return (ft_strdup(""));
 	while (i < len)
