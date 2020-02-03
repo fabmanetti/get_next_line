@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/18 17:41:53 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/02/03 17:37:42 by fmanetti         ###   ########.fr       */
+/*   Created: 2020/02/03 17:46:30 by fmanetti          #+#    #+#             */
+/*   Updated: 2020/02/03 17:46:32 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static t_file	*create_check(int fd, t_file **head)
 {
