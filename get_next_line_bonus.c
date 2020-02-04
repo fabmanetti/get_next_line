@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 17:46:30 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/02/03 17:46:32 by fmanetti         ###   ########.fr       */
+/*   Updated: 2020/02/04 18:09:09 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,14 @@ static t_file	*create_check(int fd, t_file **head)
 	while (tmp)
 	{
 		if (fd == tmp->fd)
+		{
+			if (tmp->content == NULL)
+			{
+				if (!(tmp->content = malloc(1)))
+					return (NULL);
+			}
 			return (tmp);
+		}
 		tmp = tmp->next;
 	}
 	if (!(tmp = malloc(sizeof(t_file))))
@@ -61,22 +68,42 @@ static	void	ft_cut(char **line, char **str)
 	}
 }
 
-static int		fucking_space(char **line, t_file *tmp, int bd)
+static	void	giovanni(t_file **tmp)
+{
+	int x;
+
+	x = 0;
+	while (*tmp)
+	{
+		if ((*tmp)->content != NULL)
+			x = 1;
+		*tmp = (*tmp)->next;
+	}
+	if (x == 0)
+		free(*tmp);
+}
+
+static int		fucking_space(char **line, t_file **tmp, int bd)
 {
 	char	*tmp2;
 
-	ft_cut(line, &(tmp->content));
+	ft_cut(line, &((*tmp)->content));
 	if (*line == NULL)
 	{
 		if (!(*line = malloc(sizeof(char))))
 			return (-1);
 		(*line)[0] = '\0';
 	}
-	if (bd == 0 && (tmp->content)[0] == '\0')
+	if (bd == 0 && ((*tmp)->content)[0] == '\0')
+	{
+		free((*tmp)->content);
+		(*tmp)->content = NULL;
+		giovanni(tmp);
 		return (0);
-	tmp2 = ft_strdup(tmp->content);
-	free(tmp->content);
-	tmp->content = ft_substr(tmp2, 1, ft_strlen(tmp2) - 1);
+	}
+	tmp2 = ft_strdup((*tmp)->content);
+	free((*tmp)->content);
+	(*tmp)->content = ft_substr(tmp2, 1, ft_strlen(tmp2) - 1);
 	free(tmp2);
 	return (1);
 }
@@ -84,7 +111,7 @@ static int		fucking_space(char **line, t_file *tmp, int bd)
 int				get_next_line(int fd, char **line)
 {
 	int				bd;
-	char			buf[BUFFER_SIZE + 1];
+	char			*buf;
 	t_file			*tmp;
 	static	t_file	*head;
 	char			*tmp2;
@@ -92,6 +119,7 @@ int				get_next_line(int fd, char **line)
 	tmp = create_check(fd, &head);
 	if (fd < 0 || !line || BUFFER_SIZE < 1 || !tmp)
 		return (-1);
+	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	while ((bd = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 		buf[bd] = '\0';
@@ -104,5 +132,6 @@ int				get_next_line(int fd, char **line)
 	}
 	if (bd < 0)
 		return (-1);
-	return (fucking_space(line, tmp, bd));
+	free(buf);
+	return (fucking_space(line, &tmp, bd));
 }

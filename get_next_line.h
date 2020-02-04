@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 17:42:32 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/02/03 17:37:07 by fmanetti         ###   ########.fr       */
+/*   Updated: 2020/02/04 16:08:41 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <string.h>
+# include <fcntl.h>
 
 typedef struct	s_file
 {
@@ -30,4 +32,8 @@ char			*ft_strdup(const char *s1);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 int				ft_strlen(const char *s);
 
+#endif
+
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 42
 #endif
