@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 17:41:53 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/02/04 18:09:30 by fmanetti         ###   ########.fr       */
+/*   Updated: 2020/02/05 14:06:13 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,5 +133,6 @@ int				get_next_line(int fd, char **line)
 	if (bd < 0)
 		return (-1);
 	free(buf);
+	buf = NULL;
 	return (fucking_space(line, &tmp, bd));
 }
