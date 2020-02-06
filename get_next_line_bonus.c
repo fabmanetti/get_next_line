@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 17:46:30 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/02/05 14:09:35 by fmanetti         ###   ########.fr       */
+/*   Updated: 2020/02/06 17:59:37 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,8 @@ int				get_next_line(int fd, char **line)
 	tmp = create_check(fd, &head);
 	if (fd < 0 || !line || BUFFER_SIZE < 1 || !tmp)
 		return (-1);
-	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!(buf = malloc((BUFFER_SIZE + 1) * sizeof(char))))
+		return (-1);
 	while ((bd = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 		buf[bd] = '\0';
@@ -133,6 +134,5 @@ int				get_next_line(int fd, char **line)
 	if (bd < 0)
 		return (-1);
 	free(buf);
-	buf = NULL;
 	return (fucking_space(line, &tmp, bd));
 }
