@@ -6,39 +6,21 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 17:41:53 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/02/05 15:35:02 by fmanetti         ###   ########.fr       */
+/*   Updated: 2020/02/06 17:47:33 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static t_file	*create_check(int fd, t_file **head)
+static	char	*create(char **tmp)
 {
-	t_file	*tmp;
-
-	tmp = *head;
-	while (tmp)
+	if (!(*tmp))
 	{
-		if (fd == tmp->fd)
-		{
-			if (tmp->content == NULL)
-			{
-				if (!(tmp->content = malloc(1)))
-					return (NULL);
-			}
-			return (tmp);
-		}
-		tmp = tmp->next;
+		if (!(*tmp = malloc(1)))
+			return (NULL);
+		(*tmp)[0] = '\0';
 	}
-	if (!(tmp = malloc(sizeof(t_file))))
-		return (NULL);
-	if (!(tmp->content = malloc(1)))
-		return (NULL);
-	tmp->fd = fd;
-	tmp->content[0] = '\0';
-	tmp->next = *head;
-	*head = tmp;
-	return (tmp);
+	return (*tmp);
 }
 
 static	void	ft_cut(char **line, char **str)
@@ -68,42 +50,26 @@ static	void	ft_cut(char **line, char **str)
 	}
 }
 
-static	void	giovanni(t_file **tmp)
-{
-	int x;
-
-	x = 0;
-	while (*tmp)
-	{
-		if ((*tmp)->content != NULL)
-			x = 1;
-		*tmp = (*tmp)->next;
-	}
-	if (x == 0)
-		free(*tmp);
-}
-
-static int		fucking_space(char **line, t_file **tmp, int bd)
+static int		fucking_space(char **line, char **tmp, int bd)
 {
 	char	*tmp2;
 
-	ft_cut(line, &((*tmp)->content));
+	ft_cut(line, &((*tmp)));
 	if (*line == NULL)
 	{
 		if (!(*line = malloc(sizeof(char))))
 			return (-1);
 		(*line)[0] = '\0';
 	}
-	if (bd == 0 && ((*tmp)->content)[0] == '\0')
+	if (bd == 0 && (*tmp)[0] == '\0')
 	{
-		free((*tmp)->content);
-		(*tmp)->content = NULL;
-		giovanni(tmp);
+		free((*tmp));
+		(*tmp) = NULL;
 		return (0);
 	}
-	tmp2 = ft_strdup((*tmp)->content);
-	free((*tmp)->content);
-	(*tmp)->content = ft_substr(tmp2, 1, ft_strlen(tmp2) - 1);
+	tmp2 = ft_strdup((*tmp));
+	free((*tmp));
+	(*tmp) = ft_substr(tmp2, 1, ft_strlen(tmp2) - 1);
 	free(tmp2);
 	return (1);
 }
@@ -112,11 +78,10 @@ int				get_next_line(int fd, char **line)
 {
 	int				bd;
 	char			*buf;
-	t_file			*tmp;
-	static	t_file	*head;
+	static	char	*tmp;
 	char			*tmp2;
 
-	tmp = create_check(fd, &head);
+	tmp = create(&tmp);
 	if (fd < 0 || !line || BUFFER_SIZE < 1 || !tmp)
 		return (-1);
 	if (!(buf = malloc((BUFFER_SIZE + 1) * sizeof(char))))
@@ -124,9 +89,9 @@ int				get_next_line(int fd, char **line)
 	while ((bd = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 		buf[bd] = '\0';
-		tmp2 = ft_strdup(tmp->content);
-		free(tmp->content);
-		tmp->content = ft_strjoin(tmp2, buf);
+		tmp2 = ft_strdup(tmp);
+		free(tmp);
+		tmp = ft_strjoin(tmp2, buf);
 		free(tmp2);
 		if (ft_strchr(buf, '\n'))
 			break ;
