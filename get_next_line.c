@@ -6,71 +6,50 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 17:41:53 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/02/06 18:04:26 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/05/02 13:17:09 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static	char	*create(char **tmp)
+static int		ending(char *tmp, char *buf)
 {
-	if (!(*tmp))
-	{
-		if (!(*tmp = malloc(1)))
-			return (NULL);
-		(*tmp)[0] = '\0';
-	}
-	return (*tmp);
+	if (tmp)
+		free(tmp);
+	if (buf)
+		free(buf);
+	return (-1);
 }
 
-static	void	ft_cut(char **line, char **str)
+static void		ft_cut(char **line, char **tmp)
 {
 	int		x;
-	char	*tmp;
 
 	x = 0;
-	if (ft_strchr(*str, '\n'))
+	if (ft_strchr(*tmp, '\n'))
 	{
-		while ((*str)[x] != '\n')
+		while ((*tmp)[x] != '\n')
 			x++;
-		*line = ft_substr(*str, 0, x);
-		tmp = ft_substr(*str, x, ft_strlen(*str) - x);
-		free(*str);
-		*str = ft_strdup(tmp);
-		free(tmp);
+		*line = ft_substr_nl(*tmp, 0, x, 0);
+		*tmp = ft_substr_nl(*tmp, x, ft_strlen(*tmp) - x, 1);
 	}
 	else
 	{
-		x = ft_strlen(*str);
-		*line = ft_substr(*str, 0, x);
-		tmp = ft_substr(*str, x, ft_strlen(*str) - x);
-		free(*str);
-		*str = ft_strdup(tmp);
-		free(tmp);
+		*line = ft_strdup(*tmp);
+		free(*tmp);
+		*tmp = NULL;
 	}
 }
 
 static int		fucking_space(char **line, char **tmp, int bd)
 {
-	char	*tmp2;
-
-	ft_cut(line, &((*tmp)));
+	ft_cut(line, tmp);
 	if (*line == NULL)
-	{
-		if (!(*line = malloc(sizeof(char))))
-			return (-1);
-		(*line)[0] = '\0';
-	}
-	if (bd == 0 && (*tmp)[0] == '\0')
-	{
-		free((*tmp));
-		(*tmp) = NULL;
+		if (!(*line = ft_strdup("")))
+			return (ending(*tmp, NULL));
+	if (bd == 0 && !(*tmp))
 		return (0);
-	}
-	tmp2 = ft_strdup((*tmp));
-	free((*tmp));
-	(*tmp) = ft_substr(tmp2, 1, ft_strlen(tmp2) - 1);
-	free(tmp2);
+	(*tmp) = ft_substr_nl(*tmp, 1, ft_strlen(*tmp) - 1, 1);
 	return (1);
 }
 
@@ -78,26 +57,24 @@ int				get_next_line(int fd, char **line)
 {
 	int				bd;
 	char			*buf;
-	static	char	*tmp;
-	char			*tmp2;
+	static char		*tmp;
 
-	tmp = create(&tmp);
-	if (fd < 0 || !line || BUFFER_SIZE < 1 || !tmp)
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (-1);
+	if (!tmp)
+		if (!(tmp = ft_strdup("")))
+			return (-1);
 	if (!(buf = malloc((BUFFER_SIZE + 1) * sizeof(char))))
-		return (-1);
+		return (ending(tmp, NULL));
 	while ((bd = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 		buf[bd] = '\0';
-		tmp2 = ft_strdup(tmp);
-		free(tmp);
-		tmp = ft_strjoin(tmp2, buf);
-		free(tmp2);
+		tmp = ft_strjoin_nl(tmp, buf);
 		if (ft_strchr(buf, '\n'))
 			break ;
 	}
 	if (bd < 0)
-		return (-1);
+		return (ending(tmp, buf));
 	free(buf);
 	return (fucking_space(line, &tmp, bd));
 }

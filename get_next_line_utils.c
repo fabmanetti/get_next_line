@@ -6,45 +6,42 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 15:51:01 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/02/06 18:04:28 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/05/02 13:02:14 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strdup(const char *s1)
+char			*ft_strdup(const char *s1)
 {
-	int		i;
 	int		x;
-	char	*p;
+	char	*s2;
 
-	i = 0;
-	x = 0;
-	x = ft_strlen(s1);
-	if (!(p = malloc((x + 1) * sizeof(char))))
+	if (!(s2 = malloc((ft_strlen(s1) + 1) * sizeof(char))))
 		return (0);
-	while (x--)
+	x = 0;
+	while (s1[x])
 	{
-		p[i] = s1[i];
-		i++;
+		s2[x] = s1[x];
+		x++;
 	}
-	p[i] = '\0';
-	return (p);
+	s2[x] = '\0';
+	return (s2);
 }
 
-char	*ft_strjoin(char *s1, char const *s2)
+char			*ft_strjoin_nl(char *s1, char const *s2)
 {
 	int		x;
 	int		i;
-	int		z;
+	int		len;
 	char	*s3;
 
 	x = 0;
 	i = 0;
 	if (!s1 || !s2)
 		return (NULL);
-	z = ft_strlen(s1);
-	if (!(s3 = (char*)malloc((z + ft_strlen(s2) + 1) * sizeof(char))))
+	len = ft_strlen(s1) + ft_strlen(s2);
+	if (!(s3 = (char*)malloc((len + 1) * sizeof(char))))
 		return (NULL);
 	while (s1[i] != '\0')
 	{
@@ -57,10 +54,11 @@ char	*ft_strjoin(char *s1, char const *s2)
 		x++;
 	}
 	s3[x + i] = '\0';
+	free(s1);
 	return (s3);
 }
 
-char	*ft_strchr(const char *s, int c)
+char			*ft_strchr(const char *s, int c)
 {
 	int		i;
 	char	d;
@@ -69,7 +67,7 @@ char	*ft_strchr(const char *s, int c)
 	i = 0;
 	if (!s)
 		return (NULL);
-	while (s[i] != '\0')
+	while (s[i])
 	{
 		if (s[i] == d)
 			return ((char*)&s[i]);
@@ -80,7 +78,8 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char			*ft_substr_nl(char *s, unsigned int start, size_t len,
+	int leaks)
 {
 	char			*s2;
 	size_t			i;
@@ -100,10 +99,12 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		i++;
 	}
 	s2[i] = '\0';
+		if (leaks)
+			free(s);
 	return (s2);
 }
 
-int		ft_strlen(const char *s)
+int				ft_strlen(const char *s)
 {
 	int i;
 

@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 17:42:32 by fmanetti          #+#    #+#             */
-/*   Updated: 2020/02/06 12:59:22 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/05/02 13:14:26 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,15 @@ typedef struct	s_file
 }				t_file;
 
 int				get_next_line(int fd, char **line);
-char			*ft_strjoin(char *s1, char const *s2);
+char			*ft_strjoin_nl(char *s1, char const *s2);
 char			*ft_strchr(const char *s, int c);
 char			*ft_strdup(const char *s1);
-char			*ft_substr(char const *s, unsigned int start, size_t len);
+char			*ft_substr_nl(char *s, unsigned int start, size_t len,
+				int leak);
 int				ft_strlen(const char *s);
 
 #endif
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
+# define BUFFER_SIZE 1
 #endif
