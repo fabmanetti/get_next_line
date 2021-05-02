@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 17:41:53 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/05/02 13:17:09 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/05/02 13:26:52 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@ static int		ending(char *tmp, char *buf)
 	return (-1);
 }
 
+static char		*ft_substr_nl(char *s, unsigned int start, size_t len)
+{
+	char	*tmp;
+
+	tmp = ft_substr(s, start, len);
+	free(s);
+	return (tmp);
+}
+
 static void		ft_cut(char **line, char **tmp)
 {
 	int		x;
@@ -30,8 +39,8 @@ static void		ft_cut(char **line, char **tmp)
 	{
 		while ((*tmp)[x] != '\n')
 			x++;
-		*line = ft_substr_nl(*tmp, 0, x, 0);
-		*tmp = ft_substr_nl(*tmp, x, ft_strlen(*tmp) - x, 1);
+		*line = ft_substr(*tmp, 0, x);
+		*tmp = ft_substr_nl(*tmp, x, ft_strlen(*tmp) - x);
 	}
 	else
 	{
@@ -49,7 +58,7 @@ static int		fucking_space(char **line, char **tmp, int bd)
 			return (ending(*tmp, NULL));
 	if (bd == 0 && !(*tmp))
 		return (0);
-	(*tmp) = ft_substr_nl(*tmp, 1, ft_strlen(*tmp) - 1, 1);
+	*tmp = ft_substr_nl(*tmp, 1, ft_strlen(*tmp) - 1);
 	return (1);
 }
 

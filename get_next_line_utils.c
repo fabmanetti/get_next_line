@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 15:51:01 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/05/02 13:02:14 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/05/02 13:27:14 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,7 @@ char			*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char			*ft_substr_nl(char *s, unsigned int start, size_t len,
-	int leaks)
+char			*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	char			*s2;
 	size_t			i;
@@ -99,8 +98,6 @@ char			*ft_substr_nl(char *s, unsigned int start, size_t len,
 		i++;
 	}
 	s2[i] = '\0';
-		if (leaks)
-			free(s);
 	return (s2);
 }
 
